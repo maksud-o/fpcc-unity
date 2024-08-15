@@ -6,6 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovementController : MonoBehaviour
 {
+    [Header("Features toggles")]
+    [SerializeField] private bool sprintEnabled = true;
+    [SerializeField] private bool crouchEnabled = true;
+    [SerializeField] private bool jumpEnabled = true;
+    [SerializeField] private bool slopeSlidingEnabled = true;
+
     [Header("Horizontal Parameters")]
     [SerializeField] private float crouchSpeed = 3f;
     [SerializeField] private float walkSpeed = 5f;
@@ -51,15 +57,21 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Start()
     {
-        PlayerInputManager.Instance.OnFoot.Jump.performed += _ => ProcessJump();
-        PlayerInputManager.Instance.OnFoot.Crouch.performed += _ => ProcessCrouch();
+        if(jumpEnabled)
+        {
+            PlayerInputSingleton.Instance.OnFoot.Jump.performed += _ => ProcessJump();
+        }
+        if(crouchEnabled)
+        {
+            PlayerInputSingleton.Instance.OnFoot.Crouch.performed += _ => ProcessCrouch();
+        }
     }
 
     private void Update()
     {
         isGrounded = controller.isGrounded;
 
-        ApplyHorizontalMovement(PlayerInputManager.Instance.OnFoot.Movement.ReadValue<Vector2>());
+        ApplyHorizontalMovement(PlayerInputSingleton.Instance.OnFoot.Movement.ReadValue<Vector2>());
         ApplyVerticalMovement();
         ApplySlopeSliding();
         controller.Move(playerVelocity * Time.deltaTime);
@@ -89,7 +101,7 @@ public class PlayerMovementController : MonoBehaviour
             {
                 motion = transform.TransformDirection(moveDirection) * crouchSpeed;
             }
-            else if (PlayerInputManager.Instance.OnFoot.Sprint.inProgress && moveDirection.z > 0)
+            else if (sprintEnabled && PlayerInputSingleton.Instance.OnFoot.Sprint.inProgress && moveDirection.z > 0)
             {
                 motion = transform.TransformDirection(moveDirection) * sprintSpeed;
                 isSprinting = true;
@@ -138,7 +150,7 @@ public class PlayerMovementController : MonoBehaviour
 
     private void ApplySlopeSliding()
     {
-        if (isGrounded && Physics.Raycast(gameObject.transform.position, Vector3.down, out RaycastHit hit, 2f) && Vector3.Angle(hit.normal, Vector3.up) >= controller.slopeLimit)
+        if (slopeSlidingEnabled && isGrounded && Physics.Raycast(gameObject.transform.position, Vector3.down, out RaycastHit hit, 2f) && Vector3.Angle(hit.normal, Vector3.up) >= controller.slopeLimit)
         {
             var normal = hit.normal;
             playerVelocity += new Vector3(normal.x, -normal.y, normal.z) * slopeSpeed;

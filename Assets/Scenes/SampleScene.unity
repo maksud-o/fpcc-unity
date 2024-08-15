@@ -344,11 +344,11 @@ GameObject:
   - component: {fileID: 216933814}
   - component: {fileID: 216933817}
   - component: {fileID: 216933816}
-  - component: {fileID: 216933821}
   - component: {fileID: 216933818}
   - component: {fileID: 216933820}
   - component: {fileID: 216933823}
   - component: {fileID: 216933819}
+  - component: {fileID: 216933821}
   - component: {fileID: 216933822}
   m_Layer: 3
   m_Name: Player
@@ -385,6 +385,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512b601881c5f9e46bdfbbc2c9e4a550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprintEnabled: 0
+  crouchEnabled: 0
+  jumpEnabled: 1
+  slopeSlidingEnabled: 0
   crouchSpeed: 3
   walkSpeed: 5
   sprintSpeed: 10
@@ -434,7 +438,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30f4ad0aa12db40489197ecb83b40122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HeadBobEnabled: 1
+  headBobEnabled: 1
+  zoomEnabled: 1
   xSensitivity: 20
   ySensitivity: 20
   upperLookLimit: 80
@@ -477,7 +482,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26dc6106239f7b3428727726640253d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  promptText: {fileID: 928505421}
+  crosshairEnabled: 1
+  playerUI: {fileID: 977885943}
+  InteractablePromptText: {fileID: 928505421}
+  crosshair: {fileID: 86270262739064620, guid: 3bf69b5d13c649749a1fe26d969e4d0c, type: 3}
 --- !u!114 &216933821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,7 +495,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 216933810}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cc8cd5a4ae9bb942af81ffe006d43ee, type: 3}
+  m_Script: {fileID: 11500000, guid: fe0a766fc380eb440a5d352d9f8ff8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!82 &216933822
@@ -598,6 +606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d7680343f071a4e9e88f26aae88ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  footstepsEnabled: 0
   crouchFootstepInterval: 1
   walkFootstepInterval: 0.5
   sprintFootstepInterval: 0.25
@@ -683,81 +692,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 65507879ee055e648b1de3581c284cca, type: 3}
   - {fileID: 8300000, guid: 8a2c7093236272043805ca942d893d01, type: 3}
   - {fileID: 8300000, guid: 5e0fe368d9a158a46b0fe96e660e78cc, type: 3}
---- !u!1 &313068555
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 313068556}
-  - component: {fileID: 313068558}
-  - component: {fileID: 313068557}
-  m_Layer: 5
-  m_Name: Crosshair
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &313068556
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313068555}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 977885944}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 5, y: 5}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &313068557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313068555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &313068558
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313068555}
-  m_CullTransparentMesh: 1
 --- !u!1 &376662128
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,7 +1382,7 @@ GameObject:
   - component: {fileID: 977885942}
   - component: {fileID: 977885941}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: PlayerUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1530,7 +1464,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 928505420}
-  - {fileID: 313068556}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

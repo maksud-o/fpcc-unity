@@ -4,6 +4,9 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class PlayerAudioController : MonoBehaviour
 {
+    [Header("Feature Toggles")]
+    [SerializeField] private bool footstepsEnabled = true;
+
     [Header("Footstep Audio Parameters")]
     [SerializeField] private float crouchFootstepInterval = 1.5f;
     [SerializeField] private float walkFootstepInterval = 1f;
@@ -26,7 +29,7 @@ public class PlayerAudioController : MonoBehaviour
 
     private void ProcessFootstep()
     {
-        if (PlayerMovementController.isGrounded && PlayerMovementController.isMoving &&
+        if (footstepsEnabled && PlayerMovementController.isGrounded && PlayerMovementController.isMoving &&
             Physics.Raycast(gameObject.transform.position, Vector3.down, out RaycastHit hit, 2f))
         {
             timer -= Time.deltaTime;

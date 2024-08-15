@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInputManager : MonoBehaviour
+public class PlayerInputSingleton : MonoBehaviour
 {
     public PlayerInput.OnFootActions OnFoot;
 
-    public static PlayerInputManager Instance { get; private set; }
+    public static PlayerInputSingleton Instance { get; private set; }
 
     private PlayerInput playerInput;
 

@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerUI))]
+[RequireComponent(typeof(PlayerUIController))]
 public class PlayerInteractController : MonoBehaviour
 {
     [Header("Interaction Parameters")]
@@ -11,27 +11,26 @@ public class PlayerInteractController : MonoBehaviour
     private bool onInteractable = false;
 
     private Camera playerCamera;
-    private PlayerUI playerUI;
+    private PlayerUIController playerUI;
 
     private void Awake()
     {
         playerCamera = GetComponentInChildren<Camera>();
-        playerUI = GetComponent<PlayerUI>();
+        playerUI = GetComponent<PlayerUIController>();
     }
 
     private void Start()
     {
-        PlayerInputManager.Instance.OnFoot.Interact.performed += _ => Interact();
+        PlayerInputSingleton.Instance.OnFoot.Interact.performed += _ => Interact();
     }
 
     private void Update()
     {
         ProcessInteractionRaycast();
     }
-
     private void Interact()
     {
-        if(onInteractable)
+        if (onInteractable)
         {
             interactable.Interact();
         }

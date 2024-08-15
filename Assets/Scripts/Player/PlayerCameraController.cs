@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] private bool HeadBobEnabled = true;
+    [Header("Feature Toggles")]
+    [SerializeField] private bool headBobEnabled = true;
+    [SerializeField] private bool zoomEnabled = true;
 
     [Header("Look Parameters")]
     [SerializeField] private float xSensitivity = 30f;
@@ -43,14 +44,17 @@ public class PlayerCameraController : MonoBehaviour
 
     private void Start()
     {
-        PlayerInputManager.Instance.OnFoot.ZoomADS.started += _ => ZoomIn();
-        PlayerInputManager.Instance.OnFoot.ZoomADS.canceled += _ => ZoomOut();
+        if(zoomEnabled)
+        {
+            PlayerInputSingleton.Instance.OnFoot.ZoomADS.started += _ => ZoomIn();
+            PlayerInputSingleton.Instance.OnFoot.ZoomADS.canceled += _ => ZoomOut();
+        }
     }
 
     private void Update()
     {
-        ProcessLook(PlayerInputManager.Instance.OnFoot.Look.ReadValue<Vector2>());
-        if (HeadBobEnabled)
+        ProcessLook(PlayerInputSingleton.Instance.OnFoot.Look.ReadValue<Vector2>());
+        if (headBobEnabled)
         {
             ProcessHeadBob();
         }
