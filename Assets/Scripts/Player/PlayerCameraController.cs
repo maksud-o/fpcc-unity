@@ -21,14 +21,14 @@ public class PlayerCameraController : MonoBehaviour
     [SerializeField] private float sprintHeadbobAmplitude = 0.1f;
     [SerializeField] private float crouchHeadbobFreq = 8f;
     [SerializeField] private float crouchHeadbobAmplitude = 0.025f;
-    [SerializeField] private float timeToReset = 0.1f;
+    [SerializeField][Tooltip("Time to reset camera to default position")] private float ResetTime = 0.75f;
     private Vector3 cameraStartPos;
     private bool inReset = false;
 
     [Header("Zoom Pwarameters")]
     [SerializeField] private float zoomTransitionTime = 0.2f;
-    [SerializeField] private float zoomFOV = 30f;
-    [SerializeField] private float defaultFOV = 90f;
+    [SerializeField][Range(1, 120)] private float zoomFOV = 30f;
+    [SerializeField][Range(1, 120)] private float defaultFOV = 90f;
     private Coroutine zoomCoroutine;
 
     private Camera playerCamera;
@@ -44,6 +44,8 @@ public class PlayerCameraController : MonoBehaviour
 
     private void Start()
     {
+        playerCamera.fieldOfView = defaultFOV;
+
         if(zoomEnabled)
         {
             PlayerInputSingleton.Instance.OnFoot.ZoomADS.started += _ => ZoomIn();
@@ -74,9 +76,9 @@ public class PlayerCameraController : MonoBehaviour
     {
         inReset = true;
         float timeElapsed = 0;
-        while(!PlayerMovementController.isMoving && timeElapsed < timeToReset)
+        while(!PlayerMovementController.isMoving && timeElapsed < ResetTime)
         {
-            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, cameraStartPos, timeElapsed / timeToReset);
+            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, cameraStartPos, timeElapsed / ResetTime);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

@@ -385,11 +385,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512b601881c5f9e46bdfbbc2c9e4a550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprintEnabled: 0
-  crouchEnabled: 0
+  sprintEnabled: 1
+  crouchEnabled: 1
   jumpEnabled: 1
-  slopeSlidingEnabled: 0
-  crouchSpeed: 3
+  slopeSlidingEnabled: 1
+  crouchSpeed: 2
   walkSpeed: 5
   sprintSpeed: 10
   jumpHeight: 0.3
@@ -450,7 +450,7 @@ MonoBehaviour:
   sprintHeadbobAmplitude: 1
   crouchHeadbobFreq: 6
   crouchHeadbobAmplitude: 0.1
-  timeToReset: 0.75
+  ResetTime: 0.75
   zoomTransitionTime: 0.2
   zoomFOV: 60
   defaultFOV: 90
@@ -606,7 +606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d7680343f071a4e9e88f26aae88ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  footstepsEnabled: 0
+  footstepsEnabled: 1
   crouchFootstepInterval: 1
   walkFootstepInterval: 0.5
   sprintFootstepInterval: 0.25

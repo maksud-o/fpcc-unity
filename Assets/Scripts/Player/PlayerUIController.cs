@@ -17,6 +17,8 @@ public class PlayerUIController : MonoBehaviour
         {
             Instantiate(crosshair, playerUI.transform);
         }
+
+        InteractablePromptText.text = string.Empty;
     }
 
     public void UpdateText(string promptMessage)
