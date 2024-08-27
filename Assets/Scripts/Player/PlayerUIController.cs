@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerUIController : MonoBehaviour
 {
-    [Header("Feature Toggles")]
+    [Header("Features Toggles")]
     [SerializeField] private bool crosshairEnabled = true;
     [Header("Parameters")]
     [SerializeField] private Canvas playerUI;

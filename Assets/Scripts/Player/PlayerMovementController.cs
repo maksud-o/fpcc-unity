@@ -12,14 +12,14 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private bool jumpEnabled = true;
     [SerializeField] private bool slopeSlidingEnabled = true;
 
-    [Header("Horizontal Parameters")]
+    [Header("Horizontal Movement Parameters")]
     [SerializeField] private float crouchSpeed = 3f;
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float sprintSpeed = 8f;
     public static bool isMoving { get; private set; } = false;
     public static bool isSprinting { get; private set; } = false;
 
-    [Header("Vertical Parameters")]
+    [Header("Vertical Movement Parameters")]
     [SerializeField] private float jumpHeight = 0.3f;
     [SerializeField] private float gravity = -9.8f;
     [SerializeField] private float midairMovementModifier = 0.33f;

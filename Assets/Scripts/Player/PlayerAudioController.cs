@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class PlayerAudioController : MonoBehaviour
 {
-    [Header("Feature Toggles")]
+    [Header("Features Toggles")]
     [SerializeField] private bool footstepsEnabled = true;
 
     [Header("Footstep Audio Parameters")]

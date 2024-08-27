@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [Header("Feature Toggles")]
+    [Header("Features Toggles")]
     [SerializeField] private bool headBobEnabled = true;
     [SerializeField] private bool zoomEnabled = true;
 
@@ -116,7 +116,7 @@ public class PlayerCameraController : MonoBehaviour
         }
 
         var bobbing = Vector3.zero;
-        bobbing.y = Mathf.Sin(Time.time * frequency) * amplitude;
+        bobbing.y = Mathf.Sin(Time.time * frequency) * amplitude; // Time.time is needed for looping headbob and stopping camera from flying away
         bobbing.x = Mathf.Cos(Time.time * frequency / 2) * amplitude / 2;
         playerCamera.transform.localPosition += bobbing * Time.deltaTime;
     }
