@@ -2,21 +2,21 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO: Editor Scripts
 public class PlayerUIController : MonoBehaviour
 {
-    [Header("Features Toggles")]
-    [SerializeField] private bool crosshairEnabled = true;
-    [Header("Parameters")]
+    [SerializeField] private PlayerConfig config;
+
     [SerializeField] private Canvas playerUI;
     [SerializeField] private TextMeshProUGUI InteractablePromptText;
-    [SerializeField] private GameObject crosshair;
+    //[SerializeField] private GameObject crosshair;
 
     private void Start()
     {
-        if(crosshairEnabled)
-        {
-            Instantiate(crosshair, playerUI.transform);
-        }
+        //if(crosshairEnabled)
+        //{
+        //    Instantiate(crosshair, playerUI.transform);
+        //}
 
         InteractablePromptText.text = string.Empty;
     }

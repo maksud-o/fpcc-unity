@@ -4,33 +4,16 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [Header("Features Toggles")]
-    [SerializeField] private bool headBobEnabled = true;
-    [SerializeField] private bool zoomEnabled = true;
+    [SerializeField] PlayerConfig config;
 
-    [Header("Look Parameters")]
-    [SerializeField] private float xSensitivity = 30f;
-    [SerializeField] private float ySensitivity = 30f;
-    [SerializeField, Range(1f, 180f)] private float upperLookLimit = 80f;
-    [SerializeField, Range(1f, 180f)] private float lowerLookLimit = 80f;
-
-    [Header("Head Bob Parameters")]
-    [SerializeField] private float walkHeadbobFreq = 14f;
-    [SerializeField] private float walkHeadbobAmplitude = 0.05f;
-    [SerializeField] private float sprintHeadbobFreq = 18f;
-    [SerializeField] private float sprintHeadbobAmplitude = 0.1f;
-    [SerializeField] private float crouchHeadbobFreq = 8f;
-    [SerializeField] private float crouchHeadbobAmplitude = 0.025f;
-    [SerializeField][Tooltip("Time to reset camera to default position")] private float ResetTime = 0.75f;
+    // HEADBOB
     private Vector3 cameraStartPos;
     private bool inReset = false;
 
-    [Header("Zoom Pwarameters")]
-    [SerializeField] private float zoomTransitionTime = 0.2f;
-    [SerializeField][Range(1, 120)] private float zoomFOV = 30f;
-    [SerializeField][Range(1, 120)] private float defaultFOV = 90f;
+    // ZOOM
     private Coroutine zoomCoroutine;
 
+    // GLOBAL
     private Camera playerCamera;
     private float rotation;
 
@@ -44,9 +27,9 @@ public class PlayerCameraController : MonoBehaviour
 
     private void Start()
     {
-        playerCamera.fieldOfView = defaultFOV;
+        playerCamera.fieldOfView = config.DefaultFOV;
 
-        if(zoomEnabled)
+        if(config.ZoomEnabled)
         {
             PlayerInputSingleton.Instance.OnFoot.ZoomADS.started += _ => ZoomIn();
             PlayerInputSingleton.Instance.OnFoot.ZoomADS.canceled += _ => ZoomOut();
@@ -56,7 +39,7 @@ public class PlayerCameraController : MonoBehaviour
     private void Update()
     {
         ProcessLook(PlayerInputSingleton.Instance.OnFoot.Look.ReadValue<Vector2>());
-        if (headBobEnabled)
+        if (config.HeadBobEnabled)
         {
             ProcessHeadBob();
         }
@@ -66,19 +49,19 @@ public class PlayerCameraController : MonoBehaviour
     {
         float mouseX = input.x;
         float mouseY = input.y;
-        rotation -= mouseY * Time.deltaTime * ySensitivity;
-        rotation = Mathf.Clamp(rotation, -upperLookLimit, lowerLookLimit); //clamp y rotation
+        rotation -= mouseY * Time.deltaTime * config.YSensitivity;
+        rotation = Mathf.Clamp(rotation, -config.UpperLookLimit, config.LowerLookLimit); //clamp y rotation
         playerCamera.transform.localRotation = Quaternion.Euler(rotation, 0, 0);
-        transform.Rotate(Vector3.up * mouseX * Time.deltaTime * xSensitivity); //rotates both camera and player
+        transform.Rotate(Vector3.up * mouseX * Time.deltaTime * config.XSensitivity); //rotates both camera and player
     }
 
     private IEnumerator ResetCameraPosition()
     {
         inReset = true;
         float timeElapsed = 0;
-        while(!PlayerMovementController.isMoving && timeElapsed < ResetTime)
+        while(!PlayerMovementController.isMoving && timeElapsed < config.ResetTime)
         {
-            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, cameraStartPos, timeElapsed / ResetTime);
+            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, cameraStartPos, timeElapsed / config.ResetTime);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
@@ -101,18 +84,18 @@ public class PlayerCameraController : MonoBehaviour
         float amplitude;
         if (PlayerMovementController.isCrouching)
         {
-            frequency = crouchHeadbobFreq;
-            amplitude = crouchHeadbobAmplitude;
+            frequency = config.CrouchHeadbobFreq;
+            amplitude = config.CrouchHeadbobAmplitude;
         }
         else if (PlayerMovementController.isSprinting)
         {
-            frequency = sprintHeadbobFreq;
-            amplitude = sprintHeadbobAmplitude;
+            frequency = config.SprintHeadbobFreq;
+            amplitude = config.SprintHeadbobAmplitude;
         }
         else
         {
-            frequency = walkHeadbobFreq;
-            amplitude = walkHeadbobAmplitude;
+            frequency = config.WalkHeadbobFreq;
+            amplitude = config.WalkHeadbobAmplitude;
         }
 
         var bobbing = Vector3.zero;
@@ -147,13 +130,13 @@ public class PlayerCameraController : MonoBehaviour
         float transitionTime;
         if(isZoomIn)
         {
-            targetFOV = zoomFOV;
-            transitionTime = zoomTransitionTime * (playerCamera.fieldOfView / defaultFOV);
+            targetFOV = config.ZoomFOV;
+            transitionTime = config.ZoomTransitionTime * (playerCamera.fieldOfView / config.DefaultFOV);
         }
         else
         {
-            targetFOV = defaultFOV;
-            transitionTime = zoomTransitionTime * (playerCamera.fieldOfView / zoomFOV);
+            targetFOV = config.DefaultFOV;
+            transitionTime = config.ZoomTransitionTime * (playerCamera.fieldOfView / config.ZoomFOV);
         }
 
         float elapsedTime = 0;

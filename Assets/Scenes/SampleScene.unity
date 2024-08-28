@@ -345,9 +345,9 @@ GameObject:
   - component: {fileID: 216933817}
   - component: {fileID: 216933816}
   - component: {fileID: 216933818}
-  - component: {fileID: 216933820}
   - component: {fileID: 216933823}
   - component: {fileID: 216933819}
+  - component: {fileID: 216933820}
   - component: {fileID: 216933821}
   - component: {fileID: 216933822}
   m_Layer: 3
@@ -385,21 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512b601881c5f9e46bdfbbc2c9e4a550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprintEnabled: 1
-  crouchEnabled: 1
-  jumpEnabled: 1
-  slopeSlidingEnabled: 1
-  crouchSpeed: 2
-  walkSpeed: 5
-  sprintSpeed: 10
-  jumpHeight: 0.3
-  gravity: -9.8
-  midairMovementModifier: 0.6
-  jumpBufferTime: 0.05
-  crouchingHeight: 1
-  crouchingCenter: {x: 0, y: 0.5, z: 0}
-  crouchTransitionTime: 0.25
-  slopeSpeed: 6
+  config: {fileID: 11400000, guid: 1d6d1fc4d1cc2364ebf5c0569232218d, type: 2}
 --- !u!143 &216933817
 CharacterController:
   m_ObjectHideFlags: 0
@@ -438,22 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30f4ad0aa12db40489197ecb83b40122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  headBobEnabled: 1
-  zoomEnabled: 1
-  xSensitivity: 20
-  ySensitivity: 20
-  upperLookLimit: 80
-  lowerLookLimit: 80
-  walkHeadbobFreq: 14
-  walkHeadbobAmplitude: 0.5
-  sprintHeadbobFreq: 20
-  sprintHeadbobAmplitude: 1
-  crouchHeadbobFreq: 6
-  crouchHeadbobAmplitude: 0.1
-  ResetTime: 0.75
-  zoomTransitionTime: 0.2
-  zoomFOV: 60
-  defaultFOV: 90
+  config: {fileID: 11400000, guid: 1d6d1fc4d1cc2364ebf5c0569232218d, type: 2}
 --- !u!114 &216933819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,10 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15d6d34e0ed2e63499eacc25032aa98c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayLength: 3
-  interactableMask:
-    serializedVersion: 2
-    m_Bits: 64
+  config: {fileID: 11400000, guid: 1d6d1fc4d1cc2364ebf5c0569232218d, type: 2}
 --- !u!114 &216933820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,10 +450,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26dc6106239f7b3428727726640253d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairEnabled: 1
+  config: {fileID: 11400000, guid: 1d6d1fc4d1cc2364ebf5c0569232218d, type: 2}
   playerUI: {fileID: 977885943}
   InteractablePromptText: {fileID: 928505421}
-  crosshair: {fileID: 86270262739064620, guid: 3bf69b5d13c649749a1fe26d969e4d0c, type: 3}
 --- !u!114 &216933821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -606,10 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d7680343f071a4e9e88f26aae88ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  footstepsEnabled: 1
-  crouchFootstepInterval: 1
-  walkFootstepInterval: 0.5
-  sprintFootstepInterval: 0.25
+  config: {fileID: 11400000, guid: 1d6d1fc4d1cc2364ebf5c0569232218d, type: 2}
   GrassClips:
   - {fileID: 8300000, guid: 551d550ab98e3cc4bb7793e752fe8628, type: 3}
   - {fileID: 8300000, guid: 18e761ff5ef14fd4588d9283fcc9b829, type: 3}
@@ -1464,6 +1428,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 928505420}
+  - {fileID: 1825060602375810409}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1905,6 +1870,43 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!224 &1825060602375810409
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012063107531993673}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 977885944}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 5, y: 5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &3012063107531993673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1825060602375810409}
+  - component: {fileID: 4087711076234224206}
+  - component: {fileID: 4698389238865432462}
+  m_Layer: 5
+  m_Name: Crosshair
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!33 &3469287838113772254
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1913,6 +1915,44 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132147525478337}
   m_Mesh: {fileID: -5495902117074765545, guid: 68c3bda34b47ebe40881b6e8db1f4a27, type: 3}
+--- !u!222 &4087711076234224206
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012063107531993673}
+  m_CullTransparentMesh: 1
+--- !u!114 &4698389238865432462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012063107531993673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

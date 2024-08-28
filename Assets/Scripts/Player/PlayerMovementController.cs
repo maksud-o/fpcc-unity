@@ -6,46 +6,28 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovementController : MonoBehaviour
 {
-    [Header("Features toggles")]
-    [SerializeField] private bool sprintEnabled = true;
-    [SerializeField] private bool crouchEnabled = true;
-    [SerializeField] private bool jumpEnabled = true;
-    [SerializeField] private bool slopeSlidingEnabled = true;
+    [SerializeField] private PlayerConfig config;
 
-    [Header("Horizontal Movement Parameters")]
-    [SerializeField] private float crouchSpeed = 3f;
-    [SerializeField] private float walkSpeed = 5f;
-    [SerializeField] private float sprintSpeed = 8f;
+    // MOVING
     public static bool isMoving { get; private set; } = false;
     public static bool isSprinting { get; private set; } = false;
 
-    [Header("Vertical Movement Parameters")]
-    [SerializeField] private float jumpHeight = 0.3f;
-    [SerializeField] private float gravity = -9.8f;
-    [SerializeField] private float midairMovementModifier = 0.33f;
-    [SerializeField] private float jumpBufferTime = 0.05f;
+    // JUMPING
+    public static bool isGrounded { get; private set; }
     private float lastJumpAttemptTime;
     private bool isTryingToJump = false;
-    public static bool isGrounded { get; private set; }
 
-    [Header("Crouching Parameters")]
-    [SerializeField] private float crouchingHeight = 1f;
-    [SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
-    [SerializeField] private float crouchTransitionTime = 0.25f; //in seconds
-    private float standingHeight;
-    private Vector3 standingCenter;
+    // CROUCHING
     public static bool inTransition { get; private set; } = false;
     public static bool isCrouching { get; private set; } = false;
 
-    [Header("Slope Sliding Parameters")]
-    [SerializeField] private float slopeSpeed = 6f;
-
+    private float standingHeight;
+    private Vector3 standingCenter;
+    
+    // GLOBAL
     private CharacterController controller;
     private Vector3 playerVelocity = Vector3.zero;
     private float playerYVelocity = 0;
-
-    //CONSTRAINTS
-    private bool canMove = true;
 
 
     private void Awake()
@@ -57,11 +39,11 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Start()
     {
-        if(jumpEnabled)
+        if(config.JumpEnabled)
         {
             PlayerInputSingleton.Instance.OnFoot.Jump.performed += _ => ProcessJump();
         }
-        if(crouchEnabled)
+        if(config.CrouchEnabled)
         {
             PlayerInputSingleton.Instance.OnFoot.Crouch.performed += _ => ProcessCrouch();
         }
@@ -79,8 +61,6 @@ public class PlayerMovementController : MonoBehaviour
 
     private void ApplyHorizontalMovement(Vector2 input)
     {
-        if (canMove)
-        {
             Vector3 moveDirection = Vector3.zero;
             moveDirection.x = input.x;
             moveDirection.z = input.y;
@@ -99,24 +79,23 @@ public class PlayerMovementController : MonoBehaviour
             Vector3 motion;
             if (isCrouching)
             {
-                motion = transform.TransformDirection(moveDirection) * crouchSpeed;
+                motion = transform.TransformDirection(moveDirection) * config.CrouchSpeed;
             }
-            else if (sprintEnabled && PlayerInputSingleton.Instance.OnFoot.Sprint.inProgress && moveDirection.z > 0)
+            else if (config.SprintEnabled && PlayerInputSingleton.Instance.OnFoot.Sprint.inProgress && moveDirection.z > 0)
             {
-                motion = transform.TransformDirection(moveDirection) * sprintSpeed;
+                motion = transform.TransformDirection(moveDirection) * config.SprintSpeed;
                 isSprinting = true;
             }
             else
             {
-                motion = transform.TransformDirection(moveDirection) * walkSpeed;
+                motion = transform.TransformDirection(moveDirection) * config.WalkSpeed;
             }
 
             if (!isGrounded)
             {
-                motion *= midairMovementModifier;
+                motion *= config.MidairMovementModifier;
             }
             playerVelocity = motion;
-        }
     }
 
     private void ProcessJump()
@@ -127,12 +106,12 @@ public class PlayerMovementController : MonoBehaviour
 
     private void ApplyJump()
     {
-        bool wasTryingToJump = Time.time - lastJumpAttemptTime <= jumpBufferTime;
+        bool wasTryingToJump = Time.time - lastJumpAttemptTime <= config.JumpBufferTime;
         bool isOrWasTryingToJump = wasTryingToJump || isTryingToJump;
-        bool canJump = isGrounded && canMove;
+        bool canJump = isGrounded;
         if (isOrWasTryingToJump && canJump)
         {
-            playerYVelocity = Mathf.Sqrt(jumpHeight * -3f * gravity);
+            playerYVelocity = Mathf.Sqrt(config.JumpHeight * -3f * config.Gravity);
         }
         isTryingToJump = false;
     }
@@ -140,7 +119,7 @@ public class PlayerMovementController : MonoBehaviour
     private void ApplyVerticalMovement()
     {
         ApplyJump();
-        playerYVelocity += gravity * Time.deltaTime;
+        playerYVelocity += config.Gravity * Time.deltaTime;
         if (isGrounded && playerYVelocity < -2f)
         {
             playerYVelocity = -2f;
@@ -150,10 +129,10 @@ public class PlayerMovementController : MonoBehaviour
 
     private void ApplySlopeSliding()
     {
-        if (slopeSlidingEnabled && isGrounded && Physics.Raycast(gameObject.transform.position, Vector3.down, out RaycastHit hit, 2f) && Vector3.Angle(hit.normal, Vector3.up) >= controller.slopeLimit)
+        if (config.SlopeSlidingEnabled && isGrounded && Physics.Raycast(gameObject.transform.position, Vector3.down, out RaycastHit hit, 2f) && Vector3.Angle(hit.normal, Vector3.up) >= controller.slopeLimit)
         {
             var normal = hit.normal;
-            playerVelocity += new Vector3(normal.x, -normal.y, normal.z) * slopeSpeed;
+            playerVelocity += new Vector3(normal.x, -normal.y, normal.z) * config.SlopeSpeed;
         }
     }
 
@@ -174,15 +153,15 @@ public class PlayerMovementController : MonoBehaviour
 
         inTransition = true;
         float timeElapsed = 0f;
-        float targetHeight = isCrouching ? standingHeight : crouchingHeight;
+        float targetHeight = isCrouching ? standingHeight : config.CrouchingHeight;
         float currentHeight = controller.height;
-        Vector3 targetCenter = isCrouching ? standingCenter : crouchingCenter;
+        Vector3 targetCenter = isCrouching ? standingCenter : config.CrouchingCenter;
         Vector3 currentCenter = controller.center;
 
-        while (timeElapsed < crouchTransitionTime)
+        while (timeElapsed < config.CrouchTransitionTime)
         {
-            controller.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / crouchTransitionTime);
-            controller.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / crouchTransitionTime);
+            controller.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / config.CrouchTransitionTime);
+            controller.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / config.CrouchTransitionTime);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

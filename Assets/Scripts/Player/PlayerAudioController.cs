@@ -4,17 +4,14 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class PlayerAudioController : MonoBehaviour
 {
-    [Header("Features Toggles")]
-    [SerializeField] private bool footstepsEnabled = true;
+    [SerializeField] private PlayerConfig config;
 
-    [Header("Footstep Audio Parameters")]
-    [SerializeField] private float crouchFootstepInterval = 1.5f;
-    [SerializeField] private float walkFootstepInterval = 1f;
-    [SerializeField] private float sprintFootstepInterval = 0.5f;
+    [Header("Footsteps")]
     [SerializeField] private AudioClip[] GrassClips;
     [SerializeField] private AudioClip[] MetalClips;
     private float timer = 0;
 
+    // GLOBAL
     private AudioSource audioSource;
 
     private void Awake()
@@ -29,7 +26,7 @@ public class PlayerAudioController : MonoBehaviour
 
     private void ProcessFootstep()
     {
-        if (footstepsEnabled && PlayerMovementController.isGrounded && PlayerMovementController.isMoving &&
+        if (config.FootstepsEnabled && PlayerMovementController.isGrounded && PlayerMovementController.isMoving &&
             Physics.Raycast(gameObject.transform.position, Vector3.down, out RaycastHit hit, 2f))
         {
             timer -= Time.deltaTime;
@@ -50,15 +47,15 @@ public class PlayerAudioController : MonoBehaviour
                 }
                 if (PlayerMovementController.isSprinting)
                 {
-                    timer = sprintFootstepInterval;
+                    timer = config.SprintFootstepInterval;
                 }
                 else if (PlayerMovementController.isCrouching)
                 {
-                    timer = crouchFootstepInterval;
+                    timer = config.CrouchFootstepInterval;
                 }
                 else
                 {
-                    timer = walkFootstepInterval;
+                    timer = config.WalkFootstepInterval;
                 }
             }
         }

@@ -2,14 +2,12 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerUIController))]
-public class PlayerInteractController : MonoBehaviour
+public class PlayerInteractionController : MonoBehaviour
 {
-    [Header("Interaction Parameters")]
-    [SerializeField] private float rayLength = 3f;
-    [SerializeField] private LayerMask interactableMask;
+    [SerializeField] private PlayerConfig config;
+
     private Interactable interactable;
     private bool onInteractable = false;
-
     private Camera playerCamera;
     private PlayerUIController playerUI;
 
@@ -39,7 +37,7 @@ public class PlayerInteractController : MonoBehaviour
     private void ProcessInteractionRaycast()
     {
         var ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, rayLength, interactableMask) && hitInfo.collider.TryGetComponent(out Interactable _interactable))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, config.RayLength, config.InteractableMask) && hitInfo.collider.TryGetComponent(out Interactable _interactable))
         {
             interactable = _interactable;
             onInteractable = true;
