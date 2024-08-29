@@ -14,6 +14,7 @@ public class PlayerCameraController : MonoBehaviour
     private Coroutine zoomCoroutine;
 
     // GLOBAL
+    [SerializeField] private GameObject cameraHolder;
     private Camera playerCamera;
     private float rotation;
 
@@ -38,11 +39,11 @@ public class PlayerCameraController : MonoBehaviour
 
     private void Update()
     {
-        ProcessLook(PlayerInputSingleton.Instance.OnFoot.Look.ReadValue<Vector2>());
         if (config.HeadBobEnabled)
         {
             ProcessHeadBob();
         }
+        ProcessLook(PlayerInputSingleton.Instance.OnFoot.Look.ReadValue<Vector2>());
     }
 
     private void ProcessLook(Vector2 input)
@@ -50,8 +51,8 @@ public class PlayerCameraController : MonoBehaviour
         float mouseX = input.x;
         float mouseY = input.y;
         rotation -= mouseY * Time.deltaTime * config.YSensitivity;
-        rotation = Mathf.Clamp(rotation, -config.UpperLookLimit, config.LowerLookLimit); //clamp y rotation
-        playerCamera.transform.localRotation = Quaternion.Euler(rotation, 0, 0);
+        rotation = Mathf.Clamp(rotation, -config.UpperLookLimit, config.LowerLookLimit);
+        playerCamera.transform.localRotation = Quaternion.Euler(rotation, 0, 0); // Not transform.Rotate because it can't be clamped
         transform.Rotate(Vector3.up * mouseX * Time.deltaTime * config.XSensitivity); //rotates both camera and player
     }
 
