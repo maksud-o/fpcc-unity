@@ -27,11 +27,11 @@ public class PlayerConfig : ScriptableObject
 
     [Header("Vertical Movement Parameters")]
     [SerializeField] private float jumpHeight = 0.3f;
-    [SerializeField] private float gravity = -9.8f;
+    [SerializeField] private float downforce = -9.8f;
     [SerializeField] private float midairMovementModifier = 0.33f;
     [SerializeField] private float jumpBufferTime = 0.05f;
     public float JumpHeight { get => jumpHeight; }
-    public float Gravity { get => gravity; }
+    public float Downforce { get => downforce; }
     public float MidairMovementModifier { get => midairMovementModifier; }
     public float JumpBufferTime { get => jumpBufferTime; }
 

@@ -111,7 +111,7 @@ public class PlayerMovementController : MonoBehaviour
         bool canJump = isGrounded;
         if (isOrWasTryingToJump && canJump)
         {
-            playerYVelocity = Mathf.Sqrt(config.JumpHeight * -3f * config.Gravity);
+            playerYVelocity = Mathf.Sqrt(config.JumpHeight * -3f * config.Downforce);
         }
         isTryingToJump = false;
     }
@@ -119,7 +119,7 @@ public class PlayerMovementController : MonoBehaviour
     private void ApplyVerticalMovement()
     {
         ApplyJump();
-        playerYVelocity += config.Gravity * Time.deltaTime;
+        playerYVelocity += config.Downforce * Time.deltaTime;
         if (isGrounded && playerYVelocity < -2f)
         {
             playerYVelocity = -2f;
