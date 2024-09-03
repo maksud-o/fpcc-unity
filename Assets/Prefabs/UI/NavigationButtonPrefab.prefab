@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5114704168279958883}
   - component: {fileID: 3145995818875520800}
   m_Layer: 5
-  m_Name: NavigationButton
+  m_Name: NavigationButtonPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
