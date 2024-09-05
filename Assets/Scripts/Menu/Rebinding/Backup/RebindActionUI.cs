@@ -4,10 +4,6 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
-////TODO: localization support
-
-////TODO: deal with composites that have parts bound in different control schemes
-
 namespace UnityEngine.InputSystem.Samples.RebindUI
 {
     /// <summary>
@@ -294,15 +290,15 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             // If it's a part binding, show the name of the part in the UI.
             var partName = default(string);
             if (action.bindings[bindingIndex].isPartOfComposite)
-                partName = $"Binding '{action.bindings[bindingIndex].name}'. ";
+                partName = $"BINDING '{action.bindings[bindingIndex].name.ToUpperInvariant()}'. ";
 
             // Bring up rebind overlay, if we have one.
             m_RebindOverlay?.SetActive(true);
             if (m_RebindText != null)
             {
                 var text = !string.IsNullOrEmpty(m_RebindOperation.expectedControlType)
-                    ? $"{partName}Waiting for {m_RebindOperation.expectedControlType} input..."
-                    : $"{partName}Waiting for input...";
+                    ? $"{partName}\nWAITING FOR INPUT"
+                    : $"{partName}\nWAITING FOR INPUT";
                 m_RebindText.text = text;
             }
 
@@ -414,21 +410,21 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
 
         // We want the label for the action name to update in edit mode, too, so
         // we kick that off from here.
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         protected void OnValidate()
         {
             UpdateActionLabel();
             UpdateBindingDisplay();
         }
 
-        #endif
+#endif
 
         private void UpdateActionLabel()
         {
             if (m_ActionLabel != null)
             {
                 var action = m_Action?.action;
-                m_ActionLabel.text = action != null ? action.name : string.Empty;
+                m_ActionLabel.text = action != null ? action.name.ToUpperInvariant() : string.Empty;
             }
         }
 

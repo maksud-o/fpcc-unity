@@ -7,7 +7,7 @@ public class PlayerConfig : ScriptableObject
 {
     [Header("MOVEMENT")]
 
-    [Header("Features toggles")]
+    [Header("Features Toggles")]
     [SerializeField] private bool sprintEnabled = true;
     [SerializeField] private bool crouchEnabled = true;
     [SerializeField] private bool jumpEnabled = true;
