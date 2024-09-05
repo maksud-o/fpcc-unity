@@ -1,12 +1,17 @@
-using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
 public class PlayerMovementController : MonoBehaviour
 {
     [SerializeField] private PlayerConfig config;
+
+    [Header("Input Actions")]
+    [SerializeField] private InputActionReference movement;
+    [SerializeField] private InputActionReference sprint;
+    [SerializeField] private InputActionReference jump;
+    [SerializeField] private InputActionReference crouch;
 
     // MOVING
     public static bool isMoving { get; private set; } = false;
@@ -23,9 +28,10 @@ public class PlayerMovementController : MonoBehaviour
 
     private float standingHeight;
     private Vector3 standingCenter;
-    
+
     // GLOBAL
     private CharacterController controller;
+    private PlayerInput input;
     private Vector3 playerVelocity = Vector3.zero;
     private float playerYVelocity = 0;
 
@@ -33,19 +39,20 @@ public class PlayerMovementController : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        input = GetComponent<PlayerInput>();
         standingHeight = controller.height;
         standingCenter = controller.center;
     }
 
     private void Start()
     {
-        if(config.JumpEnabled)
+        if (config.JumpEnabled)
         {
-            PlayerInputSingleton.Instance.OnFoot.Jump.performed += _ => ProcessJump();
+            jump.action.performed += _ => ProcessJump();
         }
-        if(config.CrouchEnabled)
+        if (config.CrouchEnabled)
         {
-            PlayerInputSingleton.Instance.OnFoot.Crouch.performed += _ => ProcessCrouch();
+            crouch.action.performed += _ => ProcessCrouch();
         }
     }
 
@@ -53,7 +60,7 @@ public class PlayerMovementController : MonoBehaviour
     {
         isGrounded = controller.isGrounded;
 
-        ApplyHorizontalMovement(PlayerInputSingleton.Instance.OnFoot.Movement.ReadValue<Vector2>());
+        ApplyHorizontalMovement(movement.action.ReadValue<Vector2>());
         ApplyVerticalMovement();
         ApplySlopeSliding();
         controller.Move(playerVelocity * Time.deltaTime);
@@ -61,41 +68,41 @@ public class PlayerMovementController : MonoBehaviour
 
     private void ApplyHorizontalMovement(Vector2 input)
     {
-            Vector3 moveDirection = Vector3.zero;
-            moveDirection.x = input.x;
-            moveDirection.z = input.y;
-            if (moveDirection.x != 0 || moveDirection.z != 0)
-            {
-                isMoving = true;
-            }
-            else
-            {
-                playerVelocity = Vector3.zero;
-                isMoving = false;
-                return;
-            }
+        Vector3 moveDirection = Vector3.zero;
+        moveDirection.x = input.x;
+        moveDirection.z = input.y;
+        if (moveDirection.x != 0 || moveDirection.z != 0)
+        {
+            isMoving = true;
+        }
+        else
+        {
+            playerVelocity = Vector3.zero;
+            isMoving = false;
+            return;
+        }
 
-            isSprinting = false;
-            Vector3 motion;
-            if (isCrouching)
-            {
-                motion = transform.TransformDirection(moveDirection) * config.CrouchSpeed;
-            }
-            else if (config.SprintEnabled && PlayerInputSingleton.Instance.OnFoot.Sprint.inProgress && moveDirection.z > 0)
-            {
-                motion = transform.TransformDirection(moveDirection) * config.SprintSpeed;
-                isSprinting = true;
-            }
-            else
-            {
-                motion = transform.TransformDirection(moveDirection) * config.WalkSpeed;
-            }
+        isSprinting = false;
+        Vector3 motion;
+        if (isCrouching)
+        {
+            motion = transform.TransformDirection(moveDirection) * config.CrouchSpeed;
+        }
+        else if (config.SprintEnabled && sprint.action.inProgress && moveDirection.z > 0)
+        {
+            motion = transform.TransformDirection(moveDirection) * config.SprintSpeed;
+            isSprinting = true;
+        }
+        else
+        {
+            motion = transform.TransformDirection(moveDirection) * config.WalkSpeed;
+        }
 
-            if (!isGrounded)
-            {
-                motion *= config.MidairMovementModifier;
-            }
-            playerVelocity = motion;
+        if (!isGrounded)
+        {
+            motion *= config.MidairMovementModifier;
+        }
+        playerVelocity = motion;
     }
 
     private void ProcessJump()

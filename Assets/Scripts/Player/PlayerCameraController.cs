@@ -1,10 +1,15 @@
 using System.Collections;
-using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerCameraController : MonoBehaviour
 {
     [SerializeField] PlayerConfig config;
+
+    [Header("Input Actions")]
+    [SerializeField] private InputActionReference look;
+    [SerializeField] private InputActionReference zoomADS;
 
     // HEADBOB
     private Vector3 cameraStartPos;
@@ -14,7 +19,7 @@ public class PlayerCameraController : MonoBehaviour
     private Coroutine zoomCoroutine;
 
     // GLOBAL
-    [SerializeField] private GameObject cameraHolder;
+    private PlayerInput input;
     private Camera playerCamera;
     private float rotation;
 
@@ -32,8 +37,8 @@ public class PlayerCameraController : MonoBehaviour
 
         if(config.ZoomEnabled)
         {
-            PlayerInputSingleton.Instance.OnFoot.ZoomADS.started += _ => ZoomIn();
-            PlayerInputSingleton.Instance.OnFoot.ZoomADS.canceled += _ => ZoomOut();
+            zoomADS.action.started += _ => ZoomIn();
+            zoomADS.action.canceled += _ => ZoomOut();
         }
     }
 
@@ -43,7 +48,7 @@ public class PlayerCameraController : MonoBehaviour
         {
             ProcessHeadBob();
         }
-        ProcessLook(PlayerInputSingleton.Instance.OnFoot.Look.ReadValue<Vector2>());
+        ProcessLook(look.action.ReadValue<Vector2>());
     }
 
     private void ProcessLook(Vector2 input)

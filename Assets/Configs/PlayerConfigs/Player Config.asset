@@ -20,7 +20,7 @@ MonoBehaviour:
   walkSpeed: 5
   sprintSpeed: 8
   jumpHeight: 0.3
-  gravity: -9.8
+  downforce: -9.8
   midairMovementModifier: 0.9
   jumpBufferTime: 0.05
   crouchingHeight: 1

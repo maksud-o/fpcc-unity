@@ -1,10 +1,13 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerUIController))]
+[RequireComponent(typeof(PlayerUIController), typeof(PlayerInput))]
 public class PlayerInteractionController : MonoBehaviour
 {
     [SerializeField] private PlayerConfig config;
+
+    [Header("Input Actions")]
+    [SerializeField] private InputActionReference interact;
 
     private Interactable interactable;
     private bool onInteractable = false;
@@ -19,7 +22,7 @@ public class PlayerInteractionController : MonoBehaviour
 
     private void Start()
     {
-        PlayerInputSingleton.Instance.OnFoot.Interact.performed += _ => Interact();
+        interact.action.performed += _ => Interact();
     }
 
     private void Update()
