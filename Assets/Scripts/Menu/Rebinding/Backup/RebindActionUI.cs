@@ -259,11 +259,15 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 m_RebindOperation = null;
             }
 
+            action.Disable();
+
             // Configure the rebind.
             m_RebindOperation = action.PerformInteractiveRebinding(bindingIndex)
+                .WithCancelingThrough("<Keyboard>/escape")
                 .OnCancel(
                     operation =>
                     {
+                        action.Enable();
                         m_RebindStopEvent?.Invoke(this, operation);
                         m_RebindOverlay?.SetActive(false);
                         UpdateBindingDisplay();
@@ -272,8 +276,18 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 .OnComplete(
                     operation =>
                     {
-                        m_RebindOverlay?.SetActive(false);
+                        action.Enable();
                         m_RebindStopEvent?.Invoke(this, operation);
+                        m_RebindOverlay?.SetActive(false);
+
+                        if (CheckDuplicateBinding(action, bindingIndex, allCompositeParts))
+                        {
+                            action.RemoveBindingOverride(bindingIndex);
+                            CleanUp();
+                            PerformInteractiveRebind(action, bindingIndex, allCompositeParts);
+                            return;
+                        }
+
                         UpdateBindingDisplay();
                         CleanUp();
 
@@ -285,6 +299,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                             if (nextBindingIndex < action.bindings.Count && action.bindings[nextBindingIndex].isPartOfComposite)
                                 PerformInteractiveRebind(action, nextBindingIndex, true);
                         }
+
                     });
 
             // If it's a part binding, show the name of the part in the UI.
@@ -333,6 +348,35 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 s_RebindActionUIs = null;
                 InputSystem.onActionChange -= OnActionChange;
             }
+        }
+
+        private bool CheckDuplicateBinding(InputAction action, int bindingIndex, bool allCompositeParts = false)
+        {
+            var newBinding = action.bindings[bindingIndex];
+            foreach (var binding in action.actionMap.bindings)
+            {
+                if (binding.action == newBinding.action)
+                {
+                    continue;
+                }
+                if (binding.effectivePath == newBinding.effectivePath)
+                {
+                    return true;
+                }
+            }
+
+            if(allCompositeParts)
+            {
+                for (int i = 1; i < bindingIndex; i++)
+                {
+                    if (action.bindings[i].effectivePath == newBinding.effectivePath)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         // When the action system re-resolves bindings, we want to update our UI in response. While this will
